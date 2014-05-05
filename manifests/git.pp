@@ -5,7 +5,7 @@ define drush::git (
   $git_repo   = false,
   $dir_name   = false,
   $update     = false,
-  $paths      = $drush::defaults::paths,
+  $paths      = $drush::params::paths,
   $user       = 'root',
   ) {
 

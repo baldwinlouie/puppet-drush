@@ -1,10 +1,10 @@
 class drush (
-  $api    = $drush::defaults::api,
-  $dist   = $drush::defaults::dist,
-  $ensure = $drush::defaults::ensure
-  ) inherits drush::defaults {
+  $api    = $drush::params::api,
+  $dist   = $drush::params::dist,
+  $ensure = $drush::params::ensure
+  ) inherits drush::params {
 
-  include drush::defaults
+  include drush::params
 
   package { 'drush':
     ensure  => $ensure,

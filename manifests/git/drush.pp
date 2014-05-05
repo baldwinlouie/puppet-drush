@@ -3,10 +3,10 @@ class drush::git::drush (
   $git_tag    = '',
   $git_repo   = 'https://github.com/drush-ops/drush.git',
   $update     = false
-  ) inherits drush::defaults {
+  ) inherits drush::params {
 
-  if !defined(Package['php5-cli']) {
-    package { 'php5-cli': ensure => present }
+  if !defined(Package[$drush::params::php_cli_package]) {
+    package { $drush::params::php_cli_package: ensure => present }
   }
 
   drush::git { $git_repo :

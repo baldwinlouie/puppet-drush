@@ -1,4 +1,16 @@
-class drush::defaults {
+class drush::params {
+
+  case $::operatingsystem {
+    'centos', 'redhat': {
+      $php_cli_package = 'php-cli'
+    }
+    'ubuntu', 'debian': {
+      $php_cli_package = 'php5-cli'
+    }
+    default: {
+      fail('The puppet-drush module only supports RHEL and Debian systems')
+    }
+  }
 
   $drush_user = 'root'
   $drush_home = '/root'

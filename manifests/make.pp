@@ -1,11 +1,11 @@
 define drush::make (
   $makefile,
   $make_path  = false,
-  $options    = $drush::defaults::options,
-  $site_path  = $drush::defaults::site_path,
-  $drush_user = $drush::defaults::drush_user,
-  $drush_home = $drush::defaults::drush_home,
-  $log        = $drush::defaults::log
+  $options    = $drush::params::options,
+  $site_path  = $drush::params::site_path,
+  $drush_user = $drush::params::drush_user,
+  $drush_home = $drush::params::drush_home,
+  $log        = $drush::params::log
   ) {
 
   if $make_path { $real_make_path = $make_path }
