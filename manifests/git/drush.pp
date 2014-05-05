@@ -16,11 +16,22 @@ class drush::git::drush (
     update     => $update,
   }
 
+  exec {'setup drush' :
+    environment => ["COMPOSER_HOME=/root"],
+    command     => '/usr/local/bin/composer install',
+    cwd         => '/usr/share/drush',
+    require     => [
+      Class['composer'],
+      Drush::Git[$git_repo],
+    ],
+    notify      => File['symlink drush'],
+  }
+
   file {'symlink drush':
     ensure  => link,
     path    => '/usr/bin/drush',
     target  => '/usr/share/drush/drush',
-    require => Drush::Git[$git_repo],
+    require => Exec['setup drush'],
     notify  => Exec['first drush run'],
   }
 
