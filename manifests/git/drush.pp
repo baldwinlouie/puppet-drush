@@ -5,14 +5,34 @@ class drush::git::drush (
   $update     = false
   ) inherits drush::params {
 
+  include php::params
+
   Exec { path => ['/bin', '/usr/bin', '/usr/local/bin', '/usr/share'], }
 
   if !defined(Package['git']) and !defined(Package['git-core']) {
-    package { 'git': ensure => present, before => Drush::Git[$git_repo]}
+    package { 'git':
+      ensure => present,
+      before => Drush::Git[$git_repo]
+    }
   }
 
-  if !defined(Package[$drush::params::php_cli_package]) {
-    package { $drush::params::php_cli_package: ensure => present }
+  if !defined(Package[$php::params::module_prefix]) {
+    package { $php::params::module_prefix:
+      ensure => present
+    }
+  }
+
+  if ! defined(Class['composer']) {
+    class { 'composer':
+      target_dir      => '/usr/local/bin',
+      composer_file   => 'composer',
+      download_method => 'curl',
+      logoutput       => false,
+      tmp_path        => '/tmp',
+      php_package     => "${php::params::module_prefix}cli",
+      curl_package    => 'curl',
+      suhosin_enabled => false,
+    }
   }
 
   drush::git { $git_repo :
@@ -41,14 +61,9 @@ class drush::git::drush (
     notify  => Exec['first drush run'],
   }
 
-  exec {'Install composer' :
-    command => 'curl -sS https://getcomposer.org/installer | php',
-    require => Package['php5-cli'],
-  }
-
   exec {'Make Composer globally executable' :
     command => 'mv composer.phar /usr/local/bin/composer',
-    require => Exec['Install composer'],
+    require => Class['composer'],
     before  => Exec['Install Drush dependencies'],
   }
 
@@ -63,7 +78,7 @@ class drush::git::drush (
     refreshonly => true,
     require     => [
       File['symlink drush'],
-      Package['php5-cli'],
+      Class['composer'],
       Exec['Install Drush dependencies'],
     ],
   }
