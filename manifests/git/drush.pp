@@ -61,11 +61,7 @@ class drush::git::drush (
   exec { 'first drush run':
     command     => 'drush cache-clear drush',
     refreshonly => true,
-    require     => [
-      File['symlink drush'],
-      Class['composer'],
-      Exec['Install Drush dependencies'],
-    ],
+    require     => File['symlink drush'],
   }
 
 }
