@@ -61,12 +61,6 @@ class drush::git::drush (
     notify  => Exec['first drush run'],
   }
 
-  exec {'Make Composer globally executable' :
-    command => 'mv composer.phar /usr/local/bin/composer',
-    require => Class['composer'],
-    before  => Exec['Install Drush dependencies'],
-  }
-
   exec {'Install Drush dependencies' :
     command => 'composer install',
     cwd     => '/usr/share/drush',
