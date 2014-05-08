@@ -42,32 +42,23 @@ class drush::git::drush (
     update     => $update,
   }
 
-  exec {'setup drush' :
-    environment => ["COMPOSER_HOME=/root"],
-    command     => '/usr/local/bin/composer install',
-    cwd         => '/usr/share/drush',
-    require     => [
-      Class['composer'],
-      Drush::Git[$git_repo],
-    ],
-    notify      => File['symlink drush'],
+  composer::exec { 'drush':
+    cmd     => 'install',
+    cwd     => '/usr/share/drush',
+    require => Drush::Git[$git_repo],
+    notify  => File['symlink drush'],
   }
 
-  file {'symlink drush':
+  file { 'symlink drush':
     ensure  => link,
     path    => '/usr/bin/drush',
     target  => '/usr/share/drush/drush',
-    require => Exec['setup drush'],
+    require => Composer::Exec['drush'],
     notify  => Exec['first drush run'],
   }
 
-  exec {'Install Drush dependencies' :
-    command => 'composer install',
-    cwd     => '/usr/share/drush',
-  }
-
   # Needed to download a Pear library
-  exec {'first drush run':
+  exec { 'first drush run':
     command     => 'drush cache-clear drush',
     refreshonly => true,
     require     => [
