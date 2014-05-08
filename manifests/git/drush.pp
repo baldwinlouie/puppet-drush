@@ -16,12 +16,6 @@ class drush::git::drush (
     }
   }
 
-  if !defined(Package[$php::params::module_prefix]) {
-    package { $php::params::module_prefix:
-      ensure => present
-    }
-  }
-
   if ! defined(Class['composer']) {
     class { 'composer':
       target_dir      => '/usr/local/bin',
