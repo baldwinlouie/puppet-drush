@@ -9,7 +9,7 @@ class drush::git::drush (
 
   Exec { path => ['/bin', '/usr/bin', '/usr/local/bin', '/usr/share'], }
 
-  if !defined(Package['git']) and !defined(Package['git-core']) {
+  if ! defined(Package['git']) {
     package { 'git':
       ensure => present,
       before => Drush::Git[$git_repo]
