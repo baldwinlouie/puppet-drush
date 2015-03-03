@@ -9,13 +9,6 @@ class drush::git::drush (
 
   Exec { path => ['/bin', '/usr/bin', '/usr/local/bin', '/usr/share'], }
 
-  if ! defined(Package['git']) {
-    package { 'git':
-      ensure => present,
-      before => Drush::Git[$git_repo]
-    }
-  }
-
   if ! defined(Class['composer']) {
     class { 'composer':
       target_dir      => '/usr/local/bin',
